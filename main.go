@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/ChimeraCoder/anaconda"
+	"net/url"
 )
 
 const (
@@ -17,8 +18,13 @@ func main() {
 	anaconda.SetConsumerSecret(consumerSecret)
 	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
 
-	result, _ := api.GetSearch("#Golang", nil)
-	for _, tweet := range result.Statuses{
-		fmt.Println(tweet.Text)
+	stream := api.PublicStreamFilter(url.Values{
+		"track": []string{"#golang, #Golang, #Goprogramminglanguage"},
+	})
+
+	defer stream.Stop()
+
+	for v := range stream.C {
+		fmt.Printf("%s\n", v)
 	}
 }
