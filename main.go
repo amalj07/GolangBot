@@ -4,13 +4,14 @@ import (
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/sirupsen/logrus"
 	"net/url"
+	"os"
 )
 
-const (
-	consumerKey = "your consumer key"
-	consumerSecret = "your consumer secret"
-	accessToken = "your access token"
-	accessTokenSecret = "your access token secret"
+var (
+	consumerKey = os.Getenv("CONSUMER_KEY")
+	consumerSecret = os.Getenv("CONSUMER_SECRET")
+	accessToken = os.Getenv("ACCESS_TOKEN")
+	accessTokenSecret = os.Getenv("ACCESS_TOKEN_SECRET")
 )
 
 func main() {
@@ -29,6 +30,10 @@ func main() {
 
 		if !ok {
 			logrus.Warningf("Unexpeted value: %T", v)
+			continue
+		}
+
+		if t.RetweetedStatus != nil {
 			continue
 		}
 
