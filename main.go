@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/ChimeraCoder/anaconda"
+	"github.com/sirupsen/logrus"
 	"net/url"
 )
 
@@ -19,12 +19,24 @@ func main() {
 	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
 
 	stream := api.PublicStreamFilter(url.Values{
-		"track": []string{"#golang, #Golang, #Goprogramminglanguage"},
+		"track": []string{"#testgolangbotproject"},
 	})
 
 	defer stream.Stop()
 
 	for v := range stream.C {
-		fmt.Printf("%s\n", v)
+		t, ok := v.(anaconda.Tweet)
+
+		if !ok {
+			logrus.Warningf("Unexpeted value: %T", v)
+			continue
+		}
+
+		_, err := api.Retweet(t.Id, false)
+		if err != nil{
+			logrus.Errorf("Failed to Retweet %d: %v", t.Id, err)
+		}
+
+		logrus.Infof("Retweeted: %d", t.Id)
 	}
 }
