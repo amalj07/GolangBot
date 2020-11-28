@@ -34,7 +34,7 @@ func main() {
 	api.SetLogger(log)
 
 	stream := api.PublicStreamFilter(url.Values{
-		"track": []string{"#testgolangbotproject"},
+		"track": []string{"#golang, #Golang, #GoprogrammingLanguage"},
 	})
 
 	defer stream.Stop()
