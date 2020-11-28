@@ -2,16 +2,10 @@ package main
 
 import (
 	"github.com/ChimeraCoder/anaconda"
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"net/url"
 	"os"
-)
-
-var (
-	consumerKey = os.Getenv("CONSUMER_KEY")
-	consumerSecret = os.Getenv("CONSUMER_SECRET")
-	accessToken = os.Getenv("ACCESS_TOKEN")
-	accessTokenSecret = os.Getenv("ACCESS_TOKEN_SECRET")
 )
 
 type logger struct {
@@ -19,6 +13,19 @@ type logger struct {
 }
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		logrus.Fatal("Failed to load .env file")
+	}
+
+	var (
+		consumerKey = os.Getenv("CONSUMER_KEY")
+		consumerSecret = os.Getenv("CONSUMER_SECRET")
+		accessToken = os.Getenv("ACCESS_TOKEN")
+		accessTokenSecret = os.Getenv("ACCESS_TOKEN_SECRET")
+	)
+
 	anaconda.SetConsumerKey(consumerKey)
 	anaconda.SetConsumerSecret(consumerSecret)
 	api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
@@ -55,5 +62,5 @@ func main() {
 
 func (log *logger) Critical(args ...interface{}) { log.Error(args...) }
 func (log *logger) Criticalf(format string, args ...interface{}) { log.Errorf(format, args...) }
-func (log *logger) Notice(args ...interface{}) { log.Error(args...) }
-func (log *logger) Noticef(format string, args ...interface{}) { log.Errorf(format, args...) }
+func (log *logger) Notice(args ...interface{}) { log.Info(args...) }
+func (log *logger) Noticef(format string, args ...interface{}) { log.Infof(format, args...) }

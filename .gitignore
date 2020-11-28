@@ -16,4 +16,4 @@
 .idea
 
 #environment variables
-twitter.env
+.env
